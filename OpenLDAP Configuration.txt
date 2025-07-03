@@ -1,0 +1,330 @@
+OpenLDAP server configuration on Rocky Linux 9
+
+
+
+hostnamectl set-hostname ldapsrv.ditiss.lab
+vi /etc/hosts
+
+192.168.16.130   ldapsrv.ditiss.lab  ldapsrv     # put your server IP address
+
+save the file.
+
+verify with following commands
+hostname -f
+ping -c3 ldapsrv.ditiss.lab
+
+
+Enable the plus repository
+
+dnf config-manager --set-enabled plus
+
+confirm with 
+dnf repolist
+
+Now install the LDAP packages
+
+dnf install openldap-servers openldap-clients -y
+
+
+Now start and enable the OpenLDAP service
+
+
+systemctl start slapd
+systemctl enable slapd
+systemctl status slapd
+
+
+Open ports for LDAP in the firewall.
+
+firewall-cmd --add-service={ldap,ldaps} --permanent
+firewall-cmd --reload 
+
+verify with
+firewall-cmd --list-all
+
+Generate a password for the LDAP manager user (Admin user)
+slappasswd
+
+Type your password at the prompt. Copy the encrypted password and paste it in a file.
+
+Crate following file and put the given contents
+vi changerootpass.ldif
+
+dn: olcDatabase={0}config,cn=config
+changetype: modify
+add: olcRootPW
+olcRootPW: <Here Put the above copied password>
+
+save the file.
+
+Run the following command.
+
+ldapadd -Y EXTERNAL -H ldapi:/// -f changerootpass.ldif
+
+
+Now run the following commands to import some basic schemas 
+
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+
+
+Restart the OpenLDAP service.
+
+systemctl restart slapd
+
+
+Now create a ldif file to create a base domain in LDAP.
+
+nano setdomain.ldif
+
+Add following content.
+
+#setdomain.ldif
+
+dn: olcDatabase={1}monitor,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth"
+  read by dn.base="cn=Manager,dc=ditiss,dc=lab" read by * none
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcSuffix
+olcSuffix: dc=ditiss,dc=lab
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcRootDN
+olcRootDN: cn=Manager,dc=ditiss,dc=lab
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+add: olcRootPW
+olcRootPW: {SSHA}qRqEVJUPkKywxegMo9b4kQHWQ6crDEFm
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+add: olcAccess
+olcAccess: {0}to attrs=userPassword,shadowLastChange by
+  dn="cn=Manager,dc=ditiss,dc=lan" write by anonymous auth by self write by * none
+olcAccess: {1}to dn.base="" by * read
+olcAccess: {2}to * by dn="cn=Manager,dc=ditiss,dc=lab" write by * read
+
+
+save the file. Run following command.
+
+ldapmodify -Y EXTERNAL -H ldapi:/// -f setdomain.ldif
+
+Verify with the following command.
+
+ldapsearch -H ldap:// -x -s base -b "" -LLL "namingContexts"
+
+Now create a ldif file to create 2 OU's people and group in the LDAP database.
+
+nano addou.ldif
+
+# addou.ldif
+
+dn: dc=ditiss,dc=lab
+objectClass: top
+objectClass: dcObject
+objectclass: organization
+o: My ditiss Organisation
+dc: ditiss
+
+dn: cn=Manager,dc=ditiss,dc=lab
+objectClass: organizationalRole
+cn: Manager
+description: OpenLDAP Manager
+
+dn: ou=People,dc=ditiss,dc=lab
+objectClass: organizationalUnit
+ou: People
+
+dn: ou=Group,dc=ditiss,dc=lab
+objectClass: organizationalUnit
+ou: Group
+
+
+save the file. Run following command.
+
+ldapadd -x -D cn=Manager,dc=ditiss,dc=lab -W -f addou.ldif
+   
+Verify using following command.
+
+ldapsearch -x -b "dc=ditiss,dc=lab" ou
+
+Now we will add a user in the LDAP database.
+
+Create a password for the user.
+
+slappasswd
+
+Give the required password and save the encrypted password in a file.
+
+Now create a ldif file to add user.
+
+nano adduser.ldif
+
+# adduser.ldif
+
+dn: uid=ldap1,ou=People,dc=ditiss,dc=lab
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: ldap1
+sn: temp
+userPassword: {SSHA}m+2H3BPqMSRWqe9Q8nIYCsFERVBDJChn
+loginShell: /bin/bash
+uidNumber: 2001
+gidNumber: 2001
+homeDirectory: /home/ldap1
+shadowLastChange: 0
+shadowMax: 0
+shadowWarning: 0
+
+dn: cn=ldap1,ou=Group,dc=ditiss,dc=lab
+objectClass: posixGroup
+cn: ldap1
+gidNumber: 2001
+memberUid: ldap1
+
+save the file.
+
+Run the following command to create the user.
+
+ldapadd -x -D cn=Manager,dc=ditiss,dc=lab -W -f adduser.ldif
+
+Verify with the following command.
+
+ldapsearch -x -b "ou=People,dc=ditiss,dc=lab"
+
+
+
+####################################################################
+
+
+
+OpenLDAP client configuration on Rocky Linux 9
+
+hostnamectl set-hostname client1.ditiss.lab
+
+
+dnf config-manager --set-enabled plus
+
+confirm with
+dnf repolist
+
+
+
+Install LDAP packages
+
+dnf install openldap -y
+dnf install openldap-clients -y
+dnf install oddjob-mkhomedir -y
+Download following package using wget command.
+
+
+wget https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64/Packages/n/nss-pam-ldapd-0.9.10-13.el9.x86_64.rpm
+
+
+Install the package using command
+
+dnf install nss-pam-ldapd-0.9.10-13.el9.x86_64.rpm
+
+Edit the following file.
+
+nano /etc/nslcd.conf
+
+Add following lines.
+
+uri   ldap://192.168.16.130   # make sure you type your server IP address here.
+base  dc=ditiss,dc=lab
+
+save the file.
+
+Edit the following file to enable ldap authentication on the system.
+
+nano /etc/nsswitch.conf
+
+change the following lines and add ldap as shown below.
+
+passwd:     files  ldap
+group:      files  ldap
+
+
+save the file.
+
+Start the nslcd service and enable it.
+
+systemctl start nslcd
+
+systemctl enable nslcd
+
+Test the connection with the LDAP server with 
+
+getent  passwd
+
+the output should display the users and it should contain the ldap1 user.
+
+Also verify using following command.
+
+id ldap1
+
+Configure PAM module.
+
+nano /etc/pam_ldap.conf
+
+Type following 
+
+uri  ldap://192.168.16.130      # type your server IP address
+base dc=ditiss,dc=lab
+binddn cn=manager,dc=ditiss,dc=lab
+bindpw password                 # type your manager password created first
+
+Save the file. Restart the nslcd service.
+
+
+Again verify using 
+
+id ldap1
+getent passwd.
+
+Now we will configure oddjob to create home directory for the LDAP users when they login.
+
+Edit the file /etc/pam.d/system-auth
+
+nano /etc/pam.d/system-auth 
+
+add following line at the end 
+session optional pam_oddjob_mkhomedir.so skel=/etc/skel umask=0077
+
+save the file.
+
+Now add the same line to /etc/pam.d/password-auth
+
+nano /etc/pam.d/password-auth
+
+add following line at the end
+
+session optional pam_oddjob_mkhomedir.so skel=/etc/skel umask=0077
+
+save the file.
+
+Start the oddjobd service.
+
+systemctl start oddjobd
+
+systemctl enable oddjobd
+
+Now again verify using 
+
+getent passwd
+
+id ldap1
+
+Now try to login using 
+su - ldap1
+
+the home directory should be created.
