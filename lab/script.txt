@@ -1,0 +1,2 @@
+Write a shell script that will collect Computername, ip address, kernel version, memory information, hard disk information and packages installed and store it in a file named as computername.
+Write a shell script that will take a class C network address from user and ping to all systems and store live system IP's and down systen IP's in different files.
