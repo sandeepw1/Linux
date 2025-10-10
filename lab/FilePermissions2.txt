@@ -1,0 +1,7 @@
+
+1.Create a folder by name shared below /. Inside this /shared folder create  folders by name sales and purchase. User ramesh works in sales department. User roshani works in purchase department. Now assign the permissions on the folders such that the sales folder is accessible to ramesh user only. Other department users are not able to access it. Similarly the purchase folder is accessible only to roshani. No other department users can access this folder. Both users can create, delete and rename files only in their folders. 
+
+
+2.Create a folder by name /project. The user mohan is the project leader. Thus he should be the owner of this folder and should get all permissions. The users ramesh and roshani are the developers. They also require all permissions on the folder. Other users should not be able to access this folder.
+
+3.Create a folder by name /data. The user Anjali should be the owner of the folder. The users mohan, ramesh and roshani are data entry operators. They also need full permissions on the folder. Other department users are not allowed to enter this directory. Vreate a directory /data-bak. Now assign permissions on this directory such that except Anjali and root no other user can copy files from the /data directory to /data-bak directory. 

@@ -1,0 +1,13 @@
+1. Create a user by name user1 and provide /bin/sh shell. Assign password to the user. Login and check the shell prompt.
+
+2. Login as admin user. Create a user by name user2 such that its UID will be 850 and shell is /usr/bin/nologin.
+
+3. Create a user by name admin1. Provide sudo permissions to this user by adding into wheel group. 
+
+4. Login as admin 1 user. Create a user by name diskadmin. Provide this user permissions for the commands fdisk, mkfs.ext4, mkdir, mount and umount only. The user should not be asked the sudo password. 
+Login as diskadmin user. Attach a 20 GB hard disk to the VM. Create 2 partitions of 11 GB and 9 GB. Mount them in /oracle and /MySQL directories.
+
+5. Create a group by name ditiss. Create 2 users d1 and d2. Add them in the ditiss group. 
+
+6. Create a user by name faculty. Create a directory by name /ditiss-data.
+Make the faculty user as the owner of this directory. Change the group of this directory to ditiss group. Assign permissions rwxrwx--- on this directory.
