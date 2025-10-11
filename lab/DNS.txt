@@ -1,0 +1,17 @@
+Configure DNS server on the DHCP Server configured. 
+Install bind package. 
+Add following forward lookup zones and add given records to it.
+sunbeam.lab  -   www    192.168.70.10     ftp 192.168.70.15   lms 192.168.70.20   learn same as lms (CNAME)
+acts.lab    -     www   192.168.80.5      ditiss  192.168.80.6     dac  192.168.80.7    dbda  same as dac (CNAME)
+demo.lab    -   www    192.168.120.2      console  192.168.120.3    mail 192.168.120.5  
+
+Create following reverse lookup zone 
+
+Network - 192.168.70.0 
+10  - www.sunbeam.lab       15 - ftp.sunbeam.lab      20 - learn.sunbeam.lab
+
+Similarly create reverse lookup zones for the above networks of zones acts.lab and demo.lab. Map the IP's specified.
+
+Install bind-utils package on the client and check all the responses using nslookup.
+
+Try to write a shell script which will ask for the domain name and records to be created and automatically configure the DNS.
