@@ -1,0 +1,12 @@
+Create a directory by name /demo on the DHCP server. Create a file by name report.txt and write something into it. 
+Go to the client and copy this file in the user home directory using scp.
+
+
+Create a directory on the client by name /reports. Create a directory by name sept25 inside this /reports directory. Create a file details.txt and write something into it.
+Go to the DHCP server and copy the above file using scp in the user home directory.
+
+
+On the dhcp server create a directory by name /ditiss. Create 2 directories by name fcn and cosa inside the /ditiss directory. 
+Inside the /ditiss/fcn directory create a file by name router.txt. Type something into this file.
+Inside the /ditiss/cosa directory create a file by name ldap.txt. Type something into this.
+Go to the client PC. Copy entrie directory /ditiss from DHCP server using scp in user home directory.
