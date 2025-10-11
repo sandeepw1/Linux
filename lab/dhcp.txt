@@ -1,0 +1,7 @@
+Create a host only network in VMWare. Assign the network address as 192.168.70.0. Do not enable DHCP Server. 
+Create 2 clones of your Linux VM. Chnage RAM to 2 GB before clone if you have less RAM.
+Connect all the machines to the above VMWare host only network.
+Start the VM that will be the DHCP Server. Assign the IP address 192.168.70.5 to this server using nmtui. 
+Configure the kea-dhcp server to assign IP address to clients from 192.168.70.30 to 192.168.70.120.
+Check if clients are getting IP address.
+Provide reservation for one of the client to get IP address 192.168.70.150.
