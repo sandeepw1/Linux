@@ -1,0 +1,10 @@
+LVM Assignments
+
+1.Add 2 30GB and 1 40GB hard disk to your Linux VM.
+2. Convert 1 30GB and 40GB hard disk to physical volume.
+3. Create a volume group by name vg10 by using above 2 hard disks.
+4. Create a logical volume of size 30GB in the vg10 volume group. Format it and mount it in /database folder.
+5. Create a logical volume of size 20GB in the VG10 volume group. Format it and mount it in /erp folder.
+6. Extend the 30GB logical volume by 19GB. Resize2fs. confirm with df command
+7. Reduce the 20GB logical volume by 8GB. First umount. resize2fs and then reduce the volume.(Specify final size for resize2fs).
+8.Add the remaining 30GB hard disk to vg10. First convert to physical volume. Then use vgextend.

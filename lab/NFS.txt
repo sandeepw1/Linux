@@ -1,0 +1,7 @@
+NFS Assignments
+
+1. Create a folder by name /dbda. Share it such that it can be accessed from any machine. All users should be able to create a file. The remote root should not be treated as root. 
+
+2. Create a folder by name /project1. Make sure it is accessible only from the client IP address. It will be read only.
+
+3. Create a folder by name /backup. It should be accessible from your network only. Allow only admin user to store data into it. for other users the folder should not be accessible. The root user should be treated as root. (The admin user should have sudo permission.)
