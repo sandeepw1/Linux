@@ -6,4 +6,9 @@
 
 4. Using ssh command create a directory by name /remote from client on the server.
 
+
 5. Using ssh directory create a file by name demo.txt inside the remote directory on the server.
+
+6. Using ssh check if CDROM is mounted on the server by using ls /mnt/folder
+
+7. Install httpd package on the server using ssh.
