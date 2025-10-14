@@ -1,0 +1,3 @@
+Login to the server using shuhari user. Create 3 web sites using virtual hosting. The first website will be accessed using name www.cisco.lab. 
+The second website will be accessed by name www.microsoft.lab and third website will be accessed by name www.redhat.lab. 
+Each website will display Welcome to <company name> message. Add entry in DNS. Verify that client is able to access the websites using curl.
