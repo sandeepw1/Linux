@@ -1,0 +1,9 @@
+1. Create a user by name shuhari on the server machine with uid 1500. Provide sudo permissions for all commands to this user. sudo should not ask password for the user.
+
+2. Create a user by name shuhari on the client machine with uid 1500. Provide sudo permissions for all commands to this user. sudo should not ask password for the user.
+
+3. Configure password less ssh for this user on client. 
+
+4. Using ssh command create a directory by name /remote from client on the server.
+
+5. Using ssh directory create a file by name demo.txt inside the remote directory on the server.
