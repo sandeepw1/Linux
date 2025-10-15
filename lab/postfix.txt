@@ -1,0 +1,6 @@
+Install and configure postfix. 
+Provide the server name as mail.demo.lab.
+Configure postfix for domain demo.lab. 
+Create .muttrc file in /etc/skel directory.
+Create user sam and jack. Login as sam and send email using mutt to jack@demo.lab.
+Login as jack and using mutt check if the email is received. Reply to this email.
