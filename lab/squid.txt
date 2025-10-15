@@ -1,0 +1,5 @@
+Install and configure squid proxy server. Configure the squid server for the following access.
+Allow client 1 to access all banking sites - hdfc bank, SBI bank, Axis bank, ICICI bank. Allow google site also.
+Allow client 2 to access all development sites - Redhat, Microsoft, Oracle, python, cisco. Allow google site.
+Block the sites which include words for all network- sports, torrent, netflix, facebook, movies, cricket.
+Block all other websites for the network
