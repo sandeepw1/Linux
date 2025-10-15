@@ -1,0 +1,7 @@
+Install vsftpd service. In the firewall open the ftp service.
+Create 3 users ftp1 ftp2 and ftp3.
+Create some files in the ftp2 user home directory.
+From client machine start ftp and login as ftp2 user. Download the files from the home directory. Close FTP. Verify the files are downloaded.
+Now start ftp and login as ftp1 user. Upload the files donloaded by ftp2 user. Check with ls. Close FTP.
+Start ftp and login as ftp3 user. 
+Now configure FTP server to block ftp3 user from log in to ftp.
